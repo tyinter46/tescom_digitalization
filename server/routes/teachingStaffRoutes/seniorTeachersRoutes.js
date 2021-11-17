@@ -1,6 +1,6 @@
 const express = require('express')
 const Router = express.Router();
-const pool = require('../db.js')
+const pool = require('../../db.js')
 
 //Get all teachers
 Router.get('/', async (req, res)=>{
@@ -16,9 +16,9 @@ Router.get('/', async (req, res)=>{
 Router.get('/:id', async (req, res)=>{
      try {
         const id = req.params.id
-        const teacher = await pool.query("SELECT * FROM senior_school_teachers WHERE sn = $1", [id])  
+        const teacher = await pool.query("SELECT * FROM senior_school_teachers WHERE id = $1", [id])  
         res.send(teacher.rows[0])       
-    } catch (eror) {
+    } catch (error) {
         console.log(error.message)
     }
 
@@ -49,7 +49,7 @@ Router.post('/', async function (req, res) {
  
 
 //Update one teacher
-Router.patch('/:id', async(req, res)=>{
+Router.put('/:id', async(req, res)=>{
 try {
 
     const id = req.params.id
