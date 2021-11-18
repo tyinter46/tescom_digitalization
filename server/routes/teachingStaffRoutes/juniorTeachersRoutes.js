@@ -16,6 +16,8 @@ Router.get('/', async (req, res)=>{
 Router.get('/:id', async (req, res)=>{
      try {
         const id = req.params.id
+        const idExist = await pool.query("SELECT EXISTS (select * from junior_school_teachers WHERE id = $1)", [id]); 
+        if (!idExist.rows[0].exists) throw new Error ("staff not available")  
         const teacher = await pool.query("SELECT * FROM junior_school_teachers WHERE id = $1", [id])  
         res.send(teacher.rows[0])       
     } catch (error) {

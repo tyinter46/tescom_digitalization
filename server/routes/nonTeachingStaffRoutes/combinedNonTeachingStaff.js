@@ -162,9 +162,12 @@ Router.put('/:id', async (req, res) => {
 Router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        const deleteOneSeniorSchoolTeacher = await pool.query("DELETE FROM combined_non_teaching_staff WHERE id = $1 RETURNING *", [id])
+        const idExist = await pool.query("SELECT EXISTS (select * from combined_non_teaching_staff WHERE id = $1)", [id]); 
+        console.log(idExist)
+       if (!idExist.rows[0].exists) throw new Error ("staff not available")  
+       const deleteOneSeniorSchoolNonTeacher = await pool.query("DELETE FROM combined_non_teaching_staff WHERE id = $1 RETURNING *", [id])
         if (res.statusCode === 200) res.send('Deleted Successfully')
-    } catch (error) {
+           } catch (error) {
         res.send(error.message)
         console.log(error.message)
     }
